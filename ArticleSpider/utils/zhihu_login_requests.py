@@ -11,6 +11,13 @@ import re
 def get_gif(data):
     with open('captcha.gif', 'wb') as fb:
         fb.write(data)
+    from PIL import Image
+    try:
+        im=Image.open('captcha.gif')
+        im.show()
+        im.close()
+    except:
+        pass
     return raw_input('captcha')
 
 def zhihu_login(account,password,oncaptcha):
