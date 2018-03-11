@@ -66,10 +66,10 @@ FEED_EXPORT_ENCODING = "utf8"
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
 #   'ArticleSpider.pipelines.ArticlespiderPipeline': 300,
-   'scrapy.pipelines.images.ImagesPipeline':1,
-   'ArticleSpider.pipelines.ArticleIMagePipeline':2,
-#   'ArticleSpider.pipelines.JsonWithEncodingPipline': 1,
-    'ArticleSpider.pipelines.MysqlPipline':3,
+  # 'scrapy.pipelines.images.ImagesPipeline':1,
+  # 'ArticleSpider.pipelines.ArticleIMagePipeline':2,
+  # 'ArticleSpider.pipelines.JsonWithEncodingPipline': 1,
+  #  'ArticleSpider.pipelines.MysqlPipline':3,
 }
 
 IMAGES_URLS_FIELD = "front_image_url"

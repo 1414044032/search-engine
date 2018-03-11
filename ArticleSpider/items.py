@@ -76,6 +76,7 @@ class ZhihuAnswerItem(scrapy.Item):
     zhihu_id=scrapy.Field()
     url=scrapy.Field()
     question_id=scrapy.Field()
+    author_id=scrapy.Field()
     content=scrapy.Field()
     parise=scrapy.Field()
     comments_num=scrapy.Field()
