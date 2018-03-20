@@ -35,7 +35,7 @@ class ZhihuSpider(scrapy.Spider):
         all_urls=[parse.urljoin(response.url,url) for url in all_urls]
         all_urls=filter(lambda x :True if x.startswith(u"https") else False,all_urls)
         for url in all_urls:
-            print(url)
+            #print(url)
             match_obj=re.match("(.*zhihu.com/question/(\d+))(/|$).*",url,re.DOTALL)
             if match_obj:
                 #有关含有question的页面下载后进行提取
@@ -43,8 +43,10 @@ class ZhihuSpider(scrapy.Spider):
                 question_id=match_obj.group(2)
 
                 yield scrapy.Request(request_url,headers=self.headers,meta={"question_id":question_id},callback=self.parse_question)
+
             else:
                 #不是问题页进行访问跟踪,继续提取。
+                #pass
                 yield scrapy.Request(url,headers=self.headers,callback=self.parse)
     def parse_question(self,response):
         #处理question页面，提取item
@@ -73,10 +75,10 @@ class ZhihuSpider(scrapy.Spider):
         answer_next=answer_json["paging"]["next"]
         #提取answer的具体字段
         for answers in answer_json["data"]:
-            print answers
+            #print (answers)
             answer_item=ZhihuAnswerItem()
             answer_item["zhihu_id"]=answers["id"]
-            answer_item["url"]=answers["url"]
+            answer_item["url"]=response.url
             answer_item["question_id"]=answers["question"]["id"]
             answer_item["author_id"]=answers["author"]["id"] if "id" in answers["author"] else None
             answer_item["content"]=answers["content"] if "content" in answers["content"] else None
@@ -100,8 +102,8 @@ class ZhihuSpider(scrapy.Spider):
         with open('captcha.gif', 'wb') as fp:
             fp.write(response.body)
         # 输入验证码
-        print 'Please enter captcha: '
-        captcha = raw_input()
+        print ('Please enter captcha: ')
+        captcha = input()
 
         yield scrapy.FormRequest(
             url="https://www.zhihu.com/login/email",
@@ -118,6 +120,6 @@ class ZhihuSpider(scrapy.Spider):
     def check_login(self,response):
         #验证是否登录成功
         test_json=json.loads(response.text)
-        if "msg" in test_json and test_json["msg"]==u"登录成功":
+        if "msg" in test_json and test_json["msg"]=="登录成功":
             for url in self.start_urls:
                 yield scrapy.Request(url,dont_filter=True,headers=self.headers)

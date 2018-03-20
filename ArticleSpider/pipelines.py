@@ -8,6 +8,7 @@ from scrapy.pipelines.images import ImagesPipeline
 import codecs
 import json
 import MySQLdb
+import MySQLdb.cursors
 from twisted.enterprise import adbapi
 class ArticlespiderPipeline(object):
     def process_item(self, item, spider):
@@ -23,7 +24,7 @@ class ArticleIMagePipeline(ImagesPipeline):
                 item["front_image_path"]=image_file_path
                 return item
         except Exception as e:
-            print e
+            print(e)
             item["front_image_path"] ="图片不可用"
             return item
 
@@ -77,13 +78,9 @@ class MysqlTwistedPipline(object):
 
     def handle_error(self,failure,item,spider):
         #处理异步插入的异常
-        print failure
+        print (failure)
 
     def do_insert(self,cursor,item):
-        insert_sql = """
-                insert into bolearticle(url_object_id,url,title,create_date,front_image_url,praise_nums,comment_nums,collection_nums,tags,body)
-                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-                 """
-        cursor.execute(insert_sql, (
-        item["url_object_id"], item["url"], item["title"], item["create_date"], item["front_image_url"],
-        item["praise_nums"], item["comment_nums"], item["collection_nums"], item["tags"], item["body"]))
+        insert_sql,parms=item.get_insert_sql()
+
+        cursor.execute(insert_sql, parms)

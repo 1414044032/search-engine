@@ -70,6 +70,7 @@ ITEM_PIPELINES = {
   # 'ArticleSpider.pipelines.ArticleIMagePipeline':2,
   # 'ArticleSpider.pipelines.JsonWithEncodingPipline': 1,
   #  'ArticleSpider.pipelines.MysqlPipline':3,
+    'ArticleSpider.pipelines.MysqlTwistedPipline':3,
 }
 
 IMAGES_URLS_FIELD = "front_image_url"
@@ -98,5 +99,5 @@ IMAGES_STORE=os.path.join(project_dir,'images')
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 MYSQL_HOST="127.0.0.1"
 MYSQL_DBNAME="article"
-MYSQL_USER="ROOT"
+MYSQL_USER="root"
 MYSQL_PASSWORD="123456"

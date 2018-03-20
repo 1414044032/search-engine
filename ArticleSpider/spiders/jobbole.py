@@ -3,7 +3,10 @@ import scrapy
 import re
 from ArticleSpider.items import JobBoleArticleItem,ArticlespiderItemLoader
 from scrapy import Request
-import urlparse
+try:
+    from urllib import parse
+except:
+    import urlparse as parse
 from scrapy.loader import ItemLoader
 from ArticleSpider.utils.common import get_md5
 class JobboleSpider(scrapy.Spider):
@@ -22,11 +25,11 @@ class JobboleSpider(scrapy.Spider):
         for post_node in post_nodes:
             image_url=post_node.css("img::attr(src)").extract_first("")
             post_url=post_node.css("::attr(href)").extract_first("")
-            yield Request(url=urlparse.urljoin(response.url,post_url),meta={"font_image_url":image_url},callback=self.parse_article)
+            yield Request(url=parse.urljoin(response.url,post_url),meta={"font_image_url":image_url},callback=self.parse_article)
         #提取下一页URl
         next_url=response.xpath('.//a[@class="next page-numbers"]/attribute::href').extract_first("")
         if next_url:
-            yield Request(url=urlparse.urljoin(response.url,next_url),callback=self.parse)
+            yield Request(url=parse.urljoin(response.url,next_url),callback=self.parse)
     def parse_article(self,response):
         article_item=JobBoleArticleItem()
         #提取文章相关字段
