@@ -3,7 +3,8 @@ import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from ArticleSpider.items import LagouJobItemLoader,LagouJobItem
-
+from ArticleSpider.utils.common import get_md5
+import datetime
 class LagouSpider(CrawlSpider):
     name = 'lagou'
     allowed_domains = ['www.lagou.com']
@@ -30,9 +31,26 @@ class LagouSpider(CrawlSpider):
     )
     def parse_job(self, response):
         item_load=LagouJobItemLoader(item=LagouJobItem(),response=response)
+        item_load.add_value("url", response.url)
+        item_load.add_value("url_object_id", get_md5(response.url))
+        item_load.add_css("title", "div.job-name::attr(title)")
+        item_load.add_css("salary", ".salary::text")
+        item_load.add_xpath("job_city", "//*[@class='job_request']/p/span[2]/text()")
+        item_load.add_xpath("work_years","//*[@class='job_request']/p/span[3]/text()")
+        item_load.add_xpath("degree_need","//*[@class='job_request']/p/span[4]/text()" )
+        item_load.add_xpath("job_type","//*[@class='job_request']/p/span[5]/text()")
+        item_load.add_css("pulish_time", ".publish_time::text")
+        item_load.add_xpath("tags", "//*[@class='position-label clearfix']/li/text()")
+        item_load.add_xpath("job_advantage", "//*[@class='job-advantage']/p/text()")
+        item_load.add_xpath("job_desc", "//*[@class='job_bt']/div")
+        item_load.add_xpath("job_addr", "//*[@class='work_addr']/a/text()")
+        item_load.add_xpath("company_url", "//*[@class='c_feature']/li/a/@title")
+        item_load.add_css("company_name", ".job_company dt img::attr(alt)")
+        item_load.add_value("crawl_time",datetime.datetime.now())
+        item_load.add_value("crawl_update_time", datetime.datetime.now())
 
-
+        lagou_item=item_load.load_item()
         #i['domain_id'] = response.xpath('//input[@id="sid"]/@value').extract()
         #i['name'] = response.xpath('//div[@id="name"]').extract()
         #i['description'] = response.xpath('//div[@id="description"]').extract()
-        return item_load.load_item()
+        return lagou_item
