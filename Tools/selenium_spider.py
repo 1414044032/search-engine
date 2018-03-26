@@ -13,8 +13,5 @@ time.sleep(1)
 print("kaishi")
 
 print (brower.find_element_by_xpath("//input[@name='_58_login']").text)
-    #.send_keys("liu-qi.wang@pccw.com")
-#brower.find_element_by_css_selector("input[name='_58_password']").send_keys("wW0776867106")
-#brower.find_element_by_css_selector("#denglu input").click()
 t_selector=Selector(text=brower.page_source)
 brower.quit()
