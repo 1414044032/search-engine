@@ -13,7 +13,9 @@ class JobboleSpider(scrapy.Spider):
     name = 'jobbole'
     allowed_domains = ['blog.jobbole.com']
     start_urls = ['http://blog.jobbole.com/all-posts/']
-
+    custom_settings={
+        "COOKIES_ENABLED" : False
+    }
     def parse(self, response):
         """
         获取下一页url并交给Scrapy下载
